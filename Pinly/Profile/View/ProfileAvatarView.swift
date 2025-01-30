@@ -14,14 +14,12 @@ struct ProfileAvatarView: View {
                 .resizable()
                 .frame(width: 72, height: 72)
                 .clipShape(Circle())
-                .foregroundStyle(Color(UIColor.systemGray5))
-                .overlay(
-                    Circle()
-                        .fill(.white)
-                        .frame(width: 24, height: 24)  // Slightly larger than the plus button
-                        .offset(x: 1, y: 1),
-                    alignment: .bottomTrailing
-                )
+                .foregroundStyle(Color.gray)
+            
+            Circle()
+                .fill(.white)
+                .frame(width: 24, height: 24)  // Slightly larger than the plus button
+                .offset(x: 2, y: 2)
 
             Button(action: {
                 // Add your action here
@@ -33,7 +31,6 @@ struct ProfileAvatarView: View {
                     .background(Color.white)
                     .clipShape(Circle())
             }
-            .offset(x: -0.5, y: -0.5)
         }
     }
 }

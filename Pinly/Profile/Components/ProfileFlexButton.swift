@@ -16,10 +16,10 @@ struct ProfileFlexButton: View {
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .overlay(
+                .overlay {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(.black, lineWidth: 1)
-                )
+                }
         }
     }
     var buttonTitle: String = "Title"

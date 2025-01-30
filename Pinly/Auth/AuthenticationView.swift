@@ -29,12 +29,11 @@ struct AuthenticationView: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: 56)
-                    .background(Color.white)
                     .foregroundColor(.black)
-                    .overlay(
+                    .overlay {
                         RoundedRectangle(cornerRadius: 28)
                             .stroke(Color.black, lineWidth: 2)
-                    )
+                    }
                 }
                 
                 Button(action: {
@@ -50,12 +49,11 @@ struct AuthenticationView: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: 56)
-                    .background(Color.white)
                     .foregroundColor(.black)
-                    .overlay(
+                    .overlay {
                         RoundedRectangle(cornerRadius: 28)
                             .stroke(Color.black, lineWidth: 2)
-                    )
+                    }
                 }
                 
                 Button(action: {
@@ -71,12 +69,11 @@ struct AuthenticationView: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: 56)
-                    .background(Color.white)
                     .foregroundColor(.black)
-                    .overlay(
+                    .overlay {
                         RoundedRectangle(cornerRadius: 28)
                             .stroke(Color.black, lineWidth: 2)
-                    )
+                    }
                 }
             }
             .padding(.horizontal)
