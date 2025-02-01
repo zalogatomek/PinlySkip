@@ -7,11 +7,11 @@
 
 import Foundation
 
-@MainActor
-final class ProfileViewModel: ObservableObject {
-    @Published private(set) var profile: Profile?
-    @Published private(set) var error: Error?
-    @Published private(set) var isLoading = false
+@Observable
+final class ProfileViewModel {
+    private(set) var profile: Profile?
+    private(set) var error: Error?
+    private(set) var isLoading = false
     
     private let service: ProfileServiceProtocol
     

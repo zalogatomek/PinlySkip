@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject private var viewModel = ProfileViewModel()
+    @State private var viewModel = ProfileViewModel()
     @State private var selectedTab = 0
     
     var body: some View {
@@ -17,9 +17,10 @@ struct ProfileView: View {
                 if let profile = viewModel.profile {
                     VStack(alignment: .leading, spacing: 12) {
                         ProfileInfoHeader(
-                            fullNameLabel: profile.fullName,
-                            bioLabel: profile.bio, viewModel: viewModel
-                        )
+                         fullNameLabel: profile.fullName,
+                         bioLabel: profile.bio,
+                         viewModel: viewModel
+)
                         .padding(.top, 16)
                         .padding(.bottom, 24)
                         .padding(.horizontal)

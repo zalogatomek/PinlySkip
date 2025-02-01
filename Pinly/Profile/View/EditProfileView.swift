@@ -9,11 +9,11 @@ import SwiftUI
 
 struct EditProfileView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: ProfileEditViewModel
+    @State private var viewModel: ProfileEditViewModel
     @State private var showingImagePicker = false
     
     init(profile: Profile, profileViewModel: ProfileViewModel) {
-        _viewModel = StateObject(wrappedValue: ProfileEditViewModel(
+        _viewModel = State(wrappedValue: ProfileEditViewModel(
             profile: profile,
             profileViewModel: profileViewModel
         ))
@@ -24,13 +24,13 @@ struct EditProfileView: View {
             HStack {
                 Spacer()
                 VStack(spacing: 8) {
-                    if viewModel.shouldRemoveAvatar {
+                    if viewModel.form.shouldRemoveAvatar {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .frame(width: 64, height: 64)
                             .clipShape(Circle())
                             .foregroundStyle(Color(.systemGray4))
-                    } else if let image = viewModel.selectedImage {
+                    } else if let image = viewModel.form.selectedImage {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFill()
@@ -38,7 +38,7 @@ struct EditProfileView: View {
                             .clipShape(Circle())
                     } else {
                         ProfileAvatarView(
-                            avatarUrl: viewModel.avatarUrl,
+                            avatarUrl: viewModel.form.avatarUrl,
                             size: 64,
                             showEditButton: false
                         )
@@ -59,7 +59,7 @@ struct EditProfileView: View {
                 Text("Username")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
-                TextField("", text: $viewModel.username)
+                TextField("", text: $viewModel.form.username)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .padding(.vertical, 8)
@@ -70,7 +70,7 @@ struct EditProfileView: View {
                 Text("Full Name")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
-                TextField("", text: $viewModel.fullName)
+                TextField("", text: $viewModel.form.fullName)
                     .padding(.vertical, 8)
                 Divider()
             }
@@ -79,7 +79,7 @@ struct EditProfileView: View {
                 Text("Bio")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
-                TextField("", text: $viewModel.bio, axis: .vertical)
+                TextField("", text: $viewModel.form.bio, axis: .vertical)
                     .textFieldStyle(.roundedBorder)
                     .lineLimit(3...6)
             }
@@ -99,9 +99,9 @@ struct EditProfileView: View {
                     .padding(.vertical, 12)
                     .background(Color.primary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .opacity(viewModel.hasChanges ? 1.0 : 0.5)
+                    .opacity(viewModel.form.hasChanges ? 1.0 : 0.5)
             }
-            .disabled(!viewModel.hasChanges)
+            .disabled(!viewModel.form.hasChanges)
             .buttonStyle(.plain)
             .padding(.bottom)
         }
@@ -126,11 +126,11 @@ struct EditProfileView: View {
         .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(
-                selectedImage: $viewModel.selectedImage,
-                shouldRemoveAvatar: $viewModel.shouldRemoveAvatar,
-                hasExistingImage: viewModel.selectedImage != nil || viewModel.avatarUrl != nil
+                selectedImage: $viewModel.form.selectedImage,
+                shouldRemoveAvatar: $viewModel.form.shouldRemoveAvatar,
+                hasExistingImage: viewModel.form.selectedImage != nil || viewModel.form.avatarUrl != nil
             )
-            .presentationDetents([.height(viewModel.selectedImage != nil || viewModel.avatarUrl != nil ? 164 : 120)])
+            .presentationDetents([.height(viewModel.form.selectedImage != nil || viewModel.form.avatarUrl != nil ? 164 : 120)])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(Color(.systemBackground))
         }

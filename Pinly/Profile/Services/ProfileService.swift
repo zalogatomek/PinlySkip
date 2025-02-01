@@ -19,8 +19,8 @@ final class ProfileService: ProfileServiceProtocol {
     func fetchProfile() async throws -> Profile {
         // Try to fetch from UserDefaults first
         if let data = defaults.data(forKey: profileKey),
-           let profile = try? JSONDecoder().decode(Profile.self, from: data) {
-            return profile
+           let model = try? JSONDecoder().decode(ProfileModel.self, from: data) {
+            return Profile(model: model)
         }
         
         // If no stored profile, return mock data
@@ -40,19 +40,25 @@ final class ProfileService: ProfileServiceProtocol {
     func updateProfile(_ form: ProfileForm) async throws -> Profile {
         try await Task.sleep(nanoseconds: 500_000_000) // Simulate network delay
         
-        let updatedProfile = Profile(
+        let profile = Profile(
             username: form.username,
             fullName: form.fullName,
             bio: form.bio,
             avatarUrl: form.avatarUrl
         )
         
-        try storeProfile(updatedProfile)
-        return updatedProfile
+        try storeProfile(profile)
+        return profile
     }
     
     private func storeProfile(_ profile: Profile) throws {
-        let data = try JSONEncoder().encode(profile)
+        let model = ProfileModel(
+            username: profile.username,
+            fullName: profile.fullName,
+            bio: profile.bio,
+            avatarUrl: profile.avatarUrl
+        )
+        let data = try JSONEncoder().encode(model)
         defaults.set(data, forKey: profileKey)
     }
 }

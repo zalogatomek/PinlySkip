@@ -11,7 +11,7 @@ struct ProfileInfoHeader: View {
     private let fullNameLabel: String
     private let bioLabel: String
     @State private var showingEditProfile = false
-    @ObservedObject var viewModel: ProfileViewModel
+    @Bindable var viewModel: ProfileViewModel
 
     init(fullNameLabel: String, bioLabel: String, viewModel: ProfileViewModel) {
         self.fullNameLabel = fullNameLabel

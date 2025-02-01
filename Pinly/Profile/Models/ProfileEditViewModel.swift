@@ -7,41 +7,21 @@
 
 import Foundation
 import UIKit
+import Observation
 
-@MainActor
-final class ProfileEditViewModel: ObservableObject {
-    @Published var username: String
-    @Published var fullName: String
-    @Published var bio: String
-    @Published var selectedImage: UIImage?
-    @Published var shouldRemoveAvatar: Bool = false
-    @Published private(set) var isLoading = false
-    @Published private(set) var error: Error?
+@Observable
+final class ProfileEditViewModel {
+    var form: ProfileForm
+    private(set) var isLoading = false
+    private(set) var error: Error?
     
-    private let profile: Profile
     private let profileViewModel: ProfileViewModel
     private let service: ProfileServiceProtocol
     
-    var hasChanges: Bool {
-        username != profile.username ||
-        fullName != profile.fullName ||
-        bio != profile.bio ||
-        selectedImage != nil ||
-        shouldRemoveAvatar
-    }
-    
-    var avatarUrl: String? {
-        profile.avatarUrl
-    }
-    
     init(profile: Profile, profileViewModel: ProfileViewModel, service: ProfileServiceProtocol = ProfileService()) {
-        self.profile = profile
+        self.form = ProfileForm(profile: profile)
         self.profileViewModel = profileViewModel
         self.service = service
-        
-        self.username = profile.username
-        self.fullName = profile.fullName
-        self.bio = profile.bio
     }
     
     func saveChanges() async {
@@ -50,12 +30,12 @@ final class ProfileEditViewModel: ObservableObject {
         
         do {
             let imageUrl: String?
-            if shouldRemoveAvatar {
-                if let currentAvatarUrl = profile.avatarUrl {
+            if form.shouldRemoveAvatar {
+                if let currentAvatarUrl = form.avatarUrl {
                     UserDefaults.standard.removeObject(forKey: currentAvatarUrl)
                 }
                 imageUrl = nil
-            } else if let image = selectedImage {
+            } else if let image = form.selectedImage {
                 let imageKey = "avatar_\(UUID().uuidString)"
                 if let imageData = image.jpegData(compressionQuality: 0.9) {
                     UserDefaults.standard.set(imageData, forKey: imageKey)
@@ -64,17 +44,17 @@ final class ProfileEditViewModel: ObservableObject {
                     imageUrl = nil
                 }
             } else {
-                imageUrl = profile.avatarUrl
+                imageUrl = form.avatarUrl
             }
             
-            let form = ProfileForm(
-                username: username,
-                fullName: fullName,
-                bio: bio,
+            let updatedForm = ProfileForm(
+                username: form.username,
+                fullName: form.fullName,
+                bio: form.bio,
                 avatarUrl: imageUrl
             )
             
-            _ = try await service.updateProfile(form)
+            _ = try await service.updateProfile(updatedForm)
             await profileViewModel.loadProfile()
         } catch {
             self.error = error
