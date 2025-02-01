@@ -1,30 +1,24 @@
-//
-//  ProfileFlexButton.swift
-//  Pinly
-//
-//  Created by Patryk Skoczylas on 30/01/2025.
-//
-
 import SwiftUI
 
 struct ProfileFlexButton: View {
-    var body: some View {
-        Button(action: {}) {
-            Text((buttonTitle))
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundColor(.black)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.black, lineWidth: 1)
-                }
-        }
+    let buttonTitle: String
+    let action: () -> Void
+    
+    init(buttonTitle: String, action: @escaping () -> Void = {}) {
+        self.buttonTitle = buttonTitle
+        self.action = action
     }
-    var buttonTitle: String = "Title"
-}
-
-#Preview {
-    ProfileFlexButton()
+    
+    var body: some View {
+        Text(buttonTitle)
+            .font(.caption)
+            .fontWeight(.medium)
+            .foregroundStyle(Color.primary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.primary, lineWidth: 1)
+            }
+    }
 }

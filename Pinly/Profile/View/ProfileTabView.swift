@@ -55,7 +55,7 @@ struct TabButton: View {
                 
                 Rectangle()
                     .frame(height: 2)
-                    .foregroundStyle(isSelected ? .black : .clear)
+                    .foregroundStyle(isSelected ? .primary : Color.clear)
             }
         }
         .frame(maxWidth: .infinity)

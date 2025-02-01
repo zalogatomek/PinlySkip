@@ -8,30 +8,47 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @StateObject private var viewModel = ProfileViewModel()
     @State private var selectedTab = 0
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 12) {
-                ProfileInfoHeader(
-                    fullNameLabel: "Patryk Skoczylas",
-                    bioLabel: "Hello World"
-                )
-                .padding(.top, 16)
-                .padding(.bottom, 24)
-                .padding(.horizontal)
-                
-                ProfileTabView()
-            }
-            
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Text("johndoe")
-                        .font(.title2)
-                        .fontWeight(.bold)
+            Group {
+                if let profile = viewModel.profile {
+                    VStack(alignment: .leading, spacing: 12) {
+                        ProfileInfoHeader(
+                            fullNameLabel: profile.fullName,
+                            bioLabel: profile.bio, viewModel: viewModel
+                        )
+                        .padding(.top, 16)
+                        .padding(.bottom, 24)
+                        .padding(.horizontal)
+                        
+                        ProfileTabView()
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Text(profile.username)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                        }
+                    }
+                } else if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }
+        .task {
+            await viewModel.loadProfile()
+        }
+        .alert("Error", isPresented: .constant(viewModel.error != nil), actions: {
+            Button("OK") {}
+        }, message: {
+            if let error = viewModel.error {
+                Text(error.localizedDescription)
+            }
+        })
     }
 }
 
