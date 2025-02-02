@@ -8,10 +8,16 @@
 import SwiftUI
 
 struct ProfileTabView: View {
+    @Binding var selectedMap: CustomMap?
+    let maps: [CustomMap]
     @State private var selectedTab = 0
-
+    
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
-        // Tab View
         VStack(spacing: 0) {
             // Tab buttons
             HStack(spacing: 0) {
@@ -26,16 +32,22 @@ struct ProfileTabView: View {
             
             // Tab content
             TabView(selection: $selectedTab) {
-                Text("Maps Content")
-                    .tag(0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(maps, id: \.id) { map in
+                            MapTileView(map: map) {
+                                selectedMap = map
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .tag(0)
                 
                 Text("Interests Content")
                     .tag(1)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
@@ -64,5 +76,5 @@ struct TabButton: View {
 }
 
 #Preview {
-    ProfileTabView()
+    ProfileTabView(selectedMap: .constant(nil), maps: [])
 }

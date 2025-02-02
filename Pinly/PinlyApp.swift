@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapboxMaps
 
 @main
 struct PinlyApp: App {

@@ -38,10 +38,10 @@ struct ProfileInfoHeader: View {
                     NavigationLink(destination: EditProfileView(
                         profile: viewModel.profile ?? Profile.mock,
                         profileViewModel: viewModel
-                    )) {
+                    )
+                    .toolbar(.hidden, for: .tabBar)) {
                         ProfileFlexButton(buttonTitle: "Edit Profile")
                     }
-                    .buttonStyle(.plain)
                     
                     Button(action: {
                         // Share action
