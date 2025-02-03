@@ -14,6 +14,8 @@ struct CustomMap: Codable, Identifiable, Hashable {
     let category: String
     var markers: [MapMarker]
     let createdAt: Date
+    var centerCoordinate: LocationCoordinate?
+    var zoomLevel: Double?
     
     init(name: String, category: String) {
         self.id = UUID().uuidString
@@ -21,6 +23,8 @@ struct CustomMap: Codable, Identifiable, Hashable {
         self.category = category
         self.markers = []
         self.createdAt = Date()
+        self.centerCoordinate = nil
+        self.zoomLevel = nil
     }
     
     static func == (lhs: CustomMap, rhs: CustomMap) -> Bool {
@@ -45,8 +49,17 @@ struct MapMarker: Codable, Identifiable {
 struct LocationCoordinate: Codable {
     let latitude: Double
     let longitude: Double
+    
+    var toCLLocationCoordinate2D: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
 }
 
 extension CustomMap {
     static let preview = CustomMap(name: "My First Map", category: "Travel")
+    
+    mutating func updateMapPosition(coordinate: CLLocationCoordinate2D?, zoom: Double?) {
+        self.centerCoordinate = coordinate.map { LocationCoordinate(latitude: $0.latitude, longitude: $0.longitude) }
+        self.zoomLevel = zoom
+    }
 }
